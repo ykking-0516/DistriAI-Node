@@ -20,6 +20,7 @@ import (
 	"github.com/docker/go-connections/nat"
 )
 
+// Check if a Docker image exists locally
 func ImageExistOrPull(imageName string) error {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -32,6 +33,7 @@ func ImageExistOrPull(imageName string) error {
 
 	isCreated, _ := docker_utils.ImageExist(ctx, cli, imageName)
 	if !isCreated {
+		// If image does not exist locally, pull it from Docker registry
 		if err := docker_utils.PullImage(imageName); err != nil {
 			return err
 		}
@@ -39,6 +41,7 @@ func ImageExistOrPull(imageName string) error {
 	return nil
 }
 
+// Run a Docker container and retrieves a score from its logs
 func RunScoreContainer(isGPU bool) (float64, error) {
 	oldScore := 0.0
 
